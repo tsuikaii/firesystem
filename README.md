@@ -11,7 +11,7 @@
 
 ## Cloudflare Workers 部署
 
-项目已经包含 `wrangler.jsonc`，生产域名设置为 `hszhe9.com`。
+项目已经包含 `wrangler.jsonc`，生产流量通过 Worker 路由接管 `hszhe9.com/*`。现有 DNS 记录会被保留，便于必要时回退。
 
 ### 从本机部署
 
@@ -20,14 +20,14 @@
 3. 在 `.env.production.local` 中配置：
    - `NEXT_PUBLIC_AMAP_KEY`
    - `NEXT_PUBLIC_AMAP_SECURITY_CODE`
-4. 运行 `pnpm deploy`。
+4. 运行 `pnpm run deploy`。
 
 ### 连接 GitHub 自动部署
 
-在 Cloudflare Workers & Pages 中创建 Worker，连接 GitHub 仓库 `tsuikaii/FireSystem`，选择 `main` 分支，并设置：
+在 Cloudflare Workers & Pages 中创建 Worker，连接 GitHub 仓库 `tsuikaii/firesystem`，选择 `main` 分支，并设置：
 
-- Build command：`pnpm build`
-- Deploy command：`pnpm deploy --skip-build`
+- Build command：`pnpm run build`
+- Deploy command：`pnpm run deploy --skip-build`
 - Root directory：`/`
 - Production branch：`main`
 - Node.js version：`22`
