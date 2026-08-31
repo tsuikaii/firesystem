@@ -9,6 +9,11 @@ type AMapMode = 'standard' | 'satellite' | 'traffic';
 type AlertItem = { id: number; level: string; title: string; place: string; time: string; device: string; status: string };
 type BuildingInfo = { name: string; type: string; floors: number; devices: number; online: number; owner: string };
 
+// AMap Web JS credentials are public browser configuration. Environment
+// variables can override these defaults for a different production account.
+const AMAP_PUBLIC_KEY = process.env.NEXT_PUBLIC_AMAP_KEY || 'f17ae6dadc9cda762bb598e95055acaf';
+const AMAP_SECURITY_CODE = process.env.NEXT_PUBLIC_AMAP_SECURITY_CODE || 'd7a0844b6582aeec28cb5d19f3deb3c4';
+
 const parks = {
   lingang: {
     name: '西安高新智造园', address: '西安市高新区丈八一路 18 号', devices: 286, online: 277, buildings: 5,
@@ -317,13 +322,13 @@ function CampusMap({ park, demoActive, openAlert, openDevices, showToast }: { pa
   const markersRef = useRef<AMapMarker[]>([]);
   const markerElementsRef = useRef<HTMLElement[]>([]);
   const [mode, setMode] = useState<AMapMode>('standard');
-  const [mapStatus, setMapStatus] = useState<'loading' | 'ready' | 'error'>(() => process.env.NEXT_PUBLIC_AMAP_KEY && process.env.NEXT_PUBLIC_AMAP_SECURITY_CODE ? 'loading' : 'error');
+  const [mapStatus, setMapStatus] = useState<'loading' | 'ready' | 'error'>(() => AMAP_PUBLIC_KEY && AMAP_SECURITY_CODE ? 'loading' : 'error');
   const [selectedSite, setSelectedSite] = useState<(typeof xianSites)[number] | null>(xianSites[0]);
 
   useEffect(() => {
     let disposed = false;
-    const key = process.env.NEXT_PUBLIC_AMAP_KEY;
-    const securityJsCode = process.env.NEXT_PUBLIC_AMAP_SECURITY_CODE;
+    const key = AMAP_PUBLIC_KEY;
+    const securityJsCode = AMAP_SECURITY_CODE;
 
     function initializeMap() {
       if (disposed || !containerRef.current || !window.AMap || mapRef.current) return;
